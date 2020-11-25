@@ -1,0 +1,89 @@
+{
+"levels": [
+    {
+    "name":"Confess your crimes, Cultists...",
+    "id": 0,
+    "fg1": "#8ba7b2",
+    "textfg":"#ffba4d",
+    "function_order": [
+        "fill_map",
+        "generate_rooms",
+        "make_corridors",
+        "fill_rooms",
+        "replace_decor"
+        ]
+    },
+    {
+    "name":"Die potato, Die",
+    "id": 1,
+    "fg1": "#3f34ca",
+    "textfg":"#739403",
+    "function_order": [
+        "fill_map",
+        "recursive_backtrack_maze",
+        "generate_rooms",
+        "make_corridors",
+        "uncarve",
+        "clear_maze_tiles",
+        "fill_rooms",
+        "replace_decor"
+        ]
+    },
+    {
+    "name":"A Colossal Cave Adventure!",
+    "id": 2,
+    "fg1": "#3f34ca",
+    "textfg":"#739403",
+    "function_order": [
+        "fill_map",
+        "random_air",
+        "dig_caves",
+        "get_air_sets",
+        "connect_air_sets",
+        "replace_decor"
+        ]
+    },
+    {
+    "name":"All Warfare is based on Deception.",
+    "id": 3,
+    "fg1": "#3f443d",
+    "textfg":"#1314a3",
+    "function_order": [
+        "fill_map",
+        "recursive_backtrack_maze",
+        "dig_caves",
+        "get_air_sets",
+        "connect_air_sets",
+        "replace_decor"
+        ]
+    },
+    {
+    "name":"We must perform a vlorbelswick",
+    "id": 4,
+    "fg1": "#de0034",
+    "textfg":"#34de03",
+    "function_order": [
+        "fill_map",
+        "random_air",
+        "dig_caves",
+        "get_air_sets",
+        "connect_air_sets",
+        "generate_rooms",
+        "make_corridors",
+        "get_air_sets",
+        "connect_air_sets",
+        "fill_rooms",
+        "replace_decor"
+        ]
+    }
+],
+"default": {
+    "name":"I AM ERROR LEVEL",
+    "id": -1,
+    "fg1": "#ff00ff",
+    "textfg":"#ff00ff",
+    "function_order": [
+        "fill_map"
+        ]
+    }
+}

@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Assets/AtlasTexture.tres" type="Texture" id=1]
+
+[node name="TextureSprite" type="Sprite"]
+texture = ExtResource( 1 )
+centered = false
+vframes = 23
+hframes = 16

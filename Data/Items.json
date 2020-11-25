@@ -1,0 +1,124 @@
+{
+"items": [
+    {
+    "name":"Demonicron",
+    "id":null,
+    "data":{},
+    "functions":[
+        {
+        "name":"Phase",
+        "function":"status",
+        "parameters": {
+            "toggle":true,
+            "takes_turn":false,
+            "effect_time":-1,
+            "effect":"phase",
+            "render_effect":true
+            }
+        },
+        {
+        "name":"Render ST",
+        "function":"status",
+        "parameters": {
+            "toggle":true,
+            "takes_turn":false,
+            "effect_time":-1,
+            "effect":"render",
+            "render_effect":true
+            }
+        }
+    ]
+    },
+    {
+    "name":"Book of Terrain",
+    "id":null,
+    "data":{},
+    "functions":[
+        {
+        "name":"Fill",
+        "function":"gen",
+        "parameters": {
+            "algorithm":"prepare_tiles"
+            }
+        },
+        {
+        "name":"Rooms",
+        "function":"gen",
+        "parameters": {
+            "algorithm":"generate_rooms"
+            }
+        },
+        {
+        "name":"Mazes",
+        "function":"gen",
+        "parameters": {
+            "algorithm":"recursive_backtrack_maze"
+            }
+        },
+        {
+        "name":"Corridors",
+        "function":"gen",
+        "parameters": {
+            "algorithm":"make_corridors"
+            }
+        },
+        {
+        "name":"Uncarve",
+        "function":"gen",
+        "parameters": {
+            "algorithm":"uncarve"
+            }
+        },
+        {
+        "name":"Clear out maze debris",
+        "function":"gen",
+        "parameters": {
+            "algorithm":"clear_maze_tiles"
+            }
+        },
+        {
+        "name":"Decorate",
+        "function":"gen",
+        "parameters": {
+            "algorithm":"replace_decor"
+            }
+        },
+        {
+        "name":"Random Air",
+        "function":"gen",
+        "parameters": {
+            "algorithm":"random_air"
+            }
+        },
+        {
+        "name":"Dig Caves",
+        "function":"gen",
+        "parameters": {
+            "algorithm":"dig_caves"
+            }
+        },
+        {
+        "name":"Get Air Sets",
+        "function":"gen",
+        "parameters": {
+            "algorithm":"get_air_sets"
+            }
+        },
+        {
+        "name":"Connect Air Sets",
+        "function":"gen",
+        "parameters": {
+            "algorithm":"connect_air_sets"
+            }
+        },
+        {
+        "name":"Level+=1",
+        "function":"gen",
+        "parameters": {
+            "algorithm":"set_level_data"
+            }
+        }
+    ]
+    }
+]
+}
