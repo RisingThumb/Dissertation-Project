@@ -27,6 +27,7 @@ var cave_coord = Vector2(5,6)
 var show_bounding_box = false
 var show_spanning_tree = true
 var renderst = []
+var chosen_path = []
 
 enum maze_info {
 	NONE = 0,
@@ -59,7 +60,24 @@ func fill_rooms():
 			(end_room.y+1+((end_room.height-1)/2))*tile_size
 		)
 		EntityContainer.add_child(new_ent)
-	
+
+func make_start_to_end_path():
+	# We have a new spanning tree to look at
+	var newst:Array = renderst.duplicate()
+	newst.shuffle()
+	var startEdge = newst.pop_back()
+	var roomsInPath: Array = []
+	roomsInPath.append(startEdge[0])
+	var current = startEdge[0];
+	while(!(current in roomsInPath)):
+		var possible_connections: Array = []
+		for edge in renderst:
+			if edge[0] == current:
+				if !(edge[1] in roomsInPath):
+					possible_connections.append(current)
+			
+		pass
+	print(startEdge)
 
 func set_level_data():
 	var data: Dictionary = Level.next_level()

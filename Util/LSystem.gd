@@ -2,6 +2,8 @@ extends Node2D
 
 var LSystems:Dictionary = {}
 
+# Return to this later
+
 func _ready():
 	add_L_System("A",
 		{
@@ -28,12 +30,12 @@ func generate_iterations(LSystemName:String, n:int) -> void:
 	sys["iterations"].clear()
 	sys["iterations"].append(sys["axiom"])
 	for i in range(1, n+1):
-		iterations.append(generate_iteration(i))
+		sys["iterations"].append(generate_iteration(i, sys))
 
-func generate_iteration(n:int) -> String:
-	var previous_iter = iterations[n-1]
+func generate_iteration(n:int, sys: Dictionary) -> String:
+	var previous_iter = sys["iterations"][n-1]
 	var new_iter:String
 	for c in previous_iter:
-		if rules.has(c):
-			new_iter += rules[c]
+		if sys["rules"].has(c):
+			new_iter += sys["rules"][c]
 	return new_iter
