@@ -8,10 +8,24 @@
     "function_order": [
         "fill_map",
         "generate_rooms",
-        "make_corridors",
         "fill_rooms",
-        "replace_decor"
-        ]
+        "make_corridors",
+        "replace_decor",
+        "populate_world"
+        ],
+    "enemies": [
+        {"name":"Rat",
+        "probability":0.005
+        },
+        {
+        "name":"Bat",
+        "probability":0.002
+        },
+        {
+        "name":"Unicorn",
+        "probability": 0.001
+        }
+    ]
     },
     {
     "name":"Die potato, Die",
@@ -22,12 +36,13 @@
         "fill_map",
         "recursive_backtrack_maze",
         "generate_rooms",
+        "fill_rooms",
         "make_corridors",
         "uncarve",
         "clear_maze_tiles",
-        "fill_rooms",
         "replace_decor"
-        ]
+        ],
+    "enemies": []
     },
     {
     "name":"A Colossal Cave Adventure!",
@@ -40,8 +55,15 @@
         "dig_caves",
         "get_air_sets",
         "connect_air_sets",
-        "replace_decor"
-        ]
+        "replace_decor",
+        "populate_world"
+        ],
+    "enemies": [
+        {
+        "name":"Bat",
+        "probability":0.003
+        }
+    ]
     },
     {
     "name":"All Warfare is based on Deception.",
@@ -55,7 +77,8 @@
         "get_air_sets",
         "connect_air_sets",
         "replace_decor"
-        ]
+        ],
+    "enemies": []
     },
     {
     "name":"We must perform a vlorbelswick",
@@ -69,12 +92,13 @@
         "get_air_sets",
         "connect_air_sets",
         "generate_rooms",
+        "fill_rooms",
         "make_corridors",
         "get_air_sets",
         "connect_air_sets",
-        "fill_rooms",
         "replace_decor"
-        ]
+        ],
+    "enemies": []
     }
 ],
 "default": {
@@ -84,6 +108,7 @@
     "textfg":"#ff00ff",
     "function_order": [
         "fill_map"
-        ]
+        ],
+    "enemies": []
     }
 }

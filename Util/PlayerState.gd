@@ -15,6 +15,7 @@ var inventory:Array = []
 enum effects {
 	PHASE = 0,
 	RENDER_ST,
+	RENDER_PATH,
 	EFFECT_NUMBER
 }
 
@@ -35,6 +36,8 @@ func get_effect_name(effect: int)-> String:
 			text="Phasing"
 		effects.RENDER_ST:
 			text="Rendering Spanning Tree"
+		effects.RENDER_PATH:
+			text="Rendering Path"
 	return text
 
 func get_duration(effect: int)-> int:

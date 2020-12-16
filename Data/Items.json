@@ -17,6 +17,17 @@
             }
         },
         {
+        "name":"Render path",
+        "function":"status",
+        "parameters": {
+            "toggle":true,
+            "takes_turn":false,
+            "effect_time":-1,
+            "effect":"render_path",
+            "render_effect":true
+            }
+        },
+        {
         "name":"Render ST",
         "function":"status",
         "parameters": {
@@ -39,6 +50,13 @@
         "function":"gen",
         "parameters": {
             "algorithm":"prepare_tiles"
+            }
+        },
+        {
+        "name":"Fill the rooms",
+        "function":"gen",
+        "parameters": {
+            "algorithm":"fill_rooms"
             }
         },
         {

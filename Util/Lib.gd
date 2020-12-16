@@ -22,6 +22,8 @@ func status(parameters: Dictionary)->void:
 				effect = PlayerState.effects.PHASE
 			"render":
 				effect = PlayerState.effects.RENDER_ST
+			"render_path":
+				effect = PlayerState.effects.RENDER_PATH
 
 	if toggle and PlayerState.is_effect(effect):
 		PlayerState.set_duration(effect, 0)
@@ -36,11 +38,18 @@ func interact_door(parameters: Dictionary)->void:
 	var state = false
 	if parameters.has("state"):
 		state = parameters["state"]
-	for door in GameState.player.doors:
-		if state:
-			door.open_door()
-		else:
-			door.close_door()
+	if parameters.has("lock") and parameters["lock"]:
+		for door in GameState.player.doors:
+			if door.locked:
+				door.unlock_door()
+				#TODO key item consumption
+				break
+	else:
+		for door in GameState.player.doors:
+			if state:
+				door.open_door()
+			else:
+				door.close_door()
 	GameState.request_render(RenderClass.renderTarget.ACTIONS)
 
 func gen(parameters: Dictionary)->void:

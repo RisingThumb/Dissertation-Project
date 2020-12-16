@@ -1,0 +1,58 @@
+{
+"ai": [
+    {
+    "name":"Rat",
+    "id":null,
+    "collision": true,
+    "group": "enemy",
+    "frame": 64,
+    "blind": false,
+    "behaviours": {
+        "a":"move_to_player",
+        "b":"move_random"
+        },
+    "sequence":"abbab",
+    "angryBehaviours": {
+        "a": "idle"
+    },
+    "angrySequence": "aaaaa",
+    "stateCooldown":2
+    },
+    {
+    "name":"Bat",
+    "id":null,
+    "collision": true,
+    "group": "enemy",
+    "frame": 65,
+    "blind": true,
+    "behaviours": {
+        "a":"move_random"
+        },
+    "sequence": "a",
+    "angryBehaviours": {
+        "a": "bite"
+        },
+    "angrySequence": "a",
+    "stateCooldown":3
+    },
+    {
+    "name":"Unicorn",
+    "id":null,
+    "collision": true,
+    "group": "enemy",
+    "frame": 76,
+    "blind": false,
+    "behaviours": {
+        "a": "chess_knight",
+        "b": "idle",
+        "c": "move_to_player"
+        },
+    "sequence": "abbcba",
+    "angryBehaviours": {
+        "a": "idle"
+    },
+    "angrySequence": "aaaaaa",
+    "stateCooldown":4
+    }
+]
+}

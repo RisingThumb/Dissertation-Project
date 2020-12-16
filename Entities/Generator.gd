@@ -10,10 +10,14 @@ onready var EntityContainer = $Entities
 export(int,0, 1000) var room_attempts = 100
 export(int, 1) var min_size = 4
 export(int, 1) var max_size = 10
-export(Vector2) var bias = Vector2(81, 81)
+export(Vector2) var bias = Vector2(61, 31)
 var Room = preload("res://Entities/Room.tscn")
 var Exit = preload("res://Entities/Stairs.tscn")
 var Door = preload("res://Entities/Door.tscn")
+var Entity = preload("res://Entities/Entity.tscn")
+
+var enemies = []
+
 var tile_size = 16
 var room_generating = true
 var cull = 0.7
@@ -44,43 +48,88 @@ func _ready():
 
 func fill_rooms():
 	# First we pick a room as the room the player "Starts" at
-	var rooms = RoomContainer.get_children()
-	rooms.shuffle()
-	var start_room = rooms.pop_back()
-	if GameState.player != null and start_room != null:
-		GameState.player.set_position(Vector2(
-			(start_room.x+1+((start_room.width-1)/2))*tile_size,
-			(start_room.y+1+((start_room.height-1)/2))*tile_size
-		))
-	var end_room = rooms.pop_back()
-	if end_room != null:
-		var new_ent = Exit.instance()
-		new_ent.global_position = Vector2(
-			(end_room.x+1+((end_room.width-1)/2))*tile_size,
-			(end_room.y+1+((end_room.height-1)/2))*tile_size
-		)
-		EntityContainer.add_child(new_ent)
+	make_start_to_end_path()
+	if chosen_path.size() == 0:
+		pass # Caves typically
+	else:
+		var startRoom = RoomContainer.get_children()[chosen_path[0]]
+		var endRoom = RoomContainer.get_children()[chosen_path[-1]]
+		if GameState.player != null and startRoom != null:
+			GameState.player.set_position(Vector2(
+				(startRoom.x+1+((startRoom.width-1)/2))*tile_size,
+				(startRoom.y+1+((startRoom.height-1)/2))*tile_size
+			))
+		if endRoom != null:
+			var new_ent = Exit.instance()
+			new_ent.global_position = Vector2(
+				(endRoom.x+1+((endRoom.width-1)/2))*tile_size,
+				(endRoom.y+1+((endRoom.height-1)/2))*tile_size
+			)
+			EntityContainer.add_child(new_ent)
+
+func populate_world(rooms:bool=false) -> void:
+	if !rooms:
+		for x in range(1, bias.x):
+			for y in range(1, bias.y):
+				if Map.get_cell_autotile_coord(x, y) == air_coord:
+					for enemy in enemies:
+						randomize()
+						if randf() < enemy.get("probability"):
+							print(enemy)
+							var entityId = Ai.get_id_by_name(enemy.get("name"))
+							var entityData = Ai.get_entity_data(entityId)
+							var newEntity = Entity.instance()
+							newEntity.set_from_data(entityData)
+							newEntity.set_position(Vector2(x*tile_size, y*tile_size))
+							EntityContainer.add_child(newEntity)
+							break
 
 func make_start_to_end_path():
+	if RoomContainer.get_child_count() == 0:
+		return
 	# We have a new spanning tree to look at
 	var newst:Array = renderst.duplicate()
 	newst.shuffle()
 	var startEdge = newst.pop_back()
 	var roomsInPath: Array = []
-	roomsInPath.append(startEdge[0])
 	var current = startEdge[0];
+	var first = true
+	var continue_at_other_end = false
+	var other_point = null
+	var split_point = -1
 	while(!(current in roomsInPath)):
+		roomsInPath.append(current)
 		var possible_connections: Array = []
 		for edge in renderst:
 			if edge[0] == current:
 				if !(edge[1] in roomsInPath):
-					possible_connections.append(current)
-			
-		pass
-	print(startEdge)
+					possible_connections.append(edge[1])
+			if edge[1] == current:
+				if !(edge[0] in roomsInPath):
+					possible_connections.append(edge[0])
+		if possible_connections.size() == 0:
+			if continue_at_other_end:
+				roomsInPath.invert()
+				current = other_point
+				continue_at_other_end = false
+				continue
+			break
+		possible_connections.shuffle()
+		if first and possible_connections.size() >= 2:
+			continue_at_other_end = true
+			first = false
+			other_point = possible_connections.pop_back()
+		if first:
+			first = false
+		current = possible_connections.pop_back()
+
+	chosen_path = roomsInPath
 
 func set_level_data():
+	randomize()
+	chosen_path.clear()
 	var data: Dictionary = Level.next_level()
+	enemies = data.get("enemies")
 	for entity in EntityContainer.get_children():
 		entity.queue_free()
 	Map.modulate = Color(str(data.get("fg1")))
@@ -376,14 +425,14 @@ func make_corridors(door_probability:int = 1.0): # Type not used but should be u
 			p_set_cell(Map, corridorpositions[0].x, corridorpositions[0].y, air_coord.x, air_coord.y)
 			if corridorpositions[0].x == corridorpositions[1].x and \
 				Map.get_cell_autotile_coord(corridorpositions[0].x+1, corridorpositions[0].y) == air_coord:
-					make_doors(door_probability, corridorpositions[0])
+					make_doors(door_probability, corridorpositions[0], arc[1], arc[0])
 					exit = true
 		while corridorpositions[0].x > corridorpositions[1].x:
 			corridorpositions[0].x-=1
 			p_set_cell(Map, corridorpositions[0].x, corridorpositions[0].y, air_coord.x, air_coord.y)
 			if corridorpositions[0].x == corridorpositions[1].x and \
 				Map.get_cell_autotile_coord(corridorpositions[0].x-1, corridorpositions[0].y) == air_coord:
-					make_doors(door_probability, corridorpositions[0])
+					make_doors(door_probability, corridorpositions[0], arc[1], arc[0])
 					exit = true
 		if exit:
 			continue
@@ -392,14 +441,14 @@ func make_corridors(door_probability:int = 1.0): # Type not used but should be u
 			p_set_cell(Map, corridorpositions[0].x, corridorpositions[0].y, air_coord.x, air_coord.y)
 			if Map.get_cell_autotile_coord(corridorpositions[0].x+1, corridorpositions[0].y) == air_coord or \
 				Map.get_cell_autotile_coord(corridorpositions[0].x-1, corridorpositions[0].y) == air_coord:
-				make_doors(door_probability, corridorpositions[0])
+				make_doors(door_probability, corridorpositions[0], arc[1], arc[0])
 				break
 		while corridorpositions[0].y > corridorpositions[1].y:
 			corridorpositions[0].y-=1
 			p_set_cell(Map, corridorpositions[0].x, corridorpositions[0].y, air_coord.x, air_coord.y)
 			if Map.get_cell_autotile_coord(corridorpositions[0].x+1, corridorpositions[0].y) == air_coord or \
 				Map.get_cell_autotile_coord(corridorpositions[0].x-1, corridorpositions[0].y) == air_coord:
-				make_doors(door_probability, corridorpositions[0])
+				make_doors(door_probability, corridorpositions[0], arc[1], arc[0])
 				break
 
 func prepare_tiles():
@@ -440,6 +489,7 @@ func generate_rooms():
 func fill_map():
 	for ent in EntityContainer.get_children():
 		ent.queue_free()
+	chosen_path.clear()
 	for x in range(bias.x):
 		for y in range(bias.y):
 			p_set_cell(Map, x, y, 3 + (randi() % 3), 8)
@@ -456,10 +506,13 @@ func make_rooms():
 			p_set_cell(Map, room.x, room.y+y, randi() % 3, 8)
 			p_set_cell(Map, room.x+room.width-1, room.y+y, randi() % 3, 8)
 
-func make_doors(probability: float, pos: Vector2):
+func make_doors(probability: float, pos: Vector2, roomNo: int, otherRoomNo:int):
 	if randf() < probability:
+		probability -= randf()*0.2
 		var new_door = Door.instance()
 		new_door.global_position = pos*tile_size
+		if !(roomNo in chosen_path) and !(otherRoomNo in chosen_path) and randf() < probability:
+			new_door.lock_door()
 		EntityContainer.add_child(new_door)
 	
 
@@ -478,6 +531,18 @@ func _draw():
 				var pos1 = Vector2((r1.x+r1.width/2)*tile_size + 8, (r1.y+r1.height/2)*tile_size)
 				var pos2 = Vector2((r2.x+r2.width/2)*tile_size + 8, (r2.y+r2.height/2)*tile_size)
 				draw_line(pos1, pos2, Color(32, 228, 0), 0.5)
-
+	if PlayerState.is_effect(PlayerState.effects.RENDER_PATH):
+		var room = null
+		var prevroom = null
+		for node in chosen_path:
+			prevroom = room
+			room = RoomContainer.get_child(node)
+			draw_circle(Vector2((room.x + room.width/2) * tile_size + 8, 
+								(room.y + room.height/2) * tile_size),
+								4, Color(32, 228, 0))
+			if prevroom != null:
+				var pos1 = Vector2((room.x+room.width/2)*tile_size + 8, (room.y+room.height/2)*tile_size)
+				var pos2 = Vector2((prevroom.x+prevroom.width/2)*tile_size + 8, (prevroom.y+prevroom.height/2)*tile_size)
+				draw_line(pos1, pos2, Color(32, 228, 0), 0.5)
 func _process(_delta):
 	update()

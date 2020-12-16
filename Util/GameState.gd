@@ -10,6 +10,7 @@ var render: RenderClass = null
 var map: GeneratorClass = null
 var player: PlayerClass = null
 signal enemy_turn
+signal player_turn
 
 func _ready() -> void:
 	elapsed = 0
@@ -29,10 +30,11 @@ func get_extra_actions() -> Array:
 			}
 		}
 		actions.append(new_action)
-	var closedAdded = false
 	var openAdded = false
+	var closeAdded = false
+	var lockAdded = false
 	for door in player.doors:
-		if !door.open and !openAdded:
+		if !door.open and !openAdded and !door.locked:
 			var new_action = {
 			"name":"Open Door",
 			"function":"interact_door",
@@ -40,10 +42,10 @@ func get_extra_actions() -> Array:
 				"state":true
 				}
 			}
-			actions.append(new_action)
 			openAdded = true
+			actions.append(new_action)
 
-		if door.open and !closedAdded:
+		if door.open and !closeAdded:
 			var new_action = {
 			"name":"Close Door",
 			"function":"interact_door",
@@ -51,9 +53,20 @@ func get_extra_actions() -> Array:
 				"state":false
 				}
 			}
+			closeAdded = true
 			actions.append(new_action)
-			closedAdded = true
-		if closedAdded and openAdded:
+		if door.locked and !lockAdded:
+			var new_action = {
+			"name":"Unlock door",
+			"function":"interact_door",
+			"parameters":{
+				"state":false,
+				"lock": true
+				}
+			}
+			lockAdded = true
+			actions.append(new_action)
+		if lockAdded and openAdded and closeAdded:
 			break
 	return actions
 
