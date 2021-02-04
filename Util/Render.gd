@@ -13,7 +13,6 @@ enum renderTarget {
 # Get some essential UI nodes
 onready var turns = $Control/HBoxContainer/VBoxContainer/Turns/MarginContainer/VBoxContainer
 onready var inventory = $Control/HBoxContainer/VBoxContainer/Inventory/MarginContainer/VBoxContainer
-onready var equipped = $Control/HBoxContainer/VBoxContainer/Equipped/MarginContainer/VBoxContainer
 onready var status = $Control/HBoxContainer/VBoxContainer/Status/MarginContainer/VBoxContainer
 onready var effects = $Control/HBoxContainer/MarginContainer/EffectsAndActions/Effect
 onready var actions = $Control/HBoxContainer/MarginContainer/EffectsAndActions/Action
@@ -45,7 +44,6 @@ func redraw(target: int) -> void:
 
 	if target == renderTarget.STATUS:
 		status.get_node("HP").text = hpPrefix + numToI(PlayerState.get_hp())
-		status.get_node("Stamina").text = staminaPrefix + numToI(PlayerState.get_stamina())
 		status.get_node("Sanity").text = sanityPrefix + numToI(PlayerState.get_sanity())
 
 	if target == renderTarget.INVENTORY:

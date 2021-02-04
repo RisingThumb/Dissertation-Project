@@ -10,6 +10,10 @@ var state = aiState.idle
 var blind = false
 var cooldownMax = 5
 var cooldown = 0
+var hp = 3
+onready var atkAnim = $AttackAnims
+onready var nextToItAreas = $NextToDetect
+var damage = 1
 
 enum aiState {
 	angry,
@@ -19,8 +23,19 @@ enum aiState {
 var behaviourValue = randi()
 
 func _ready():
+	trueposition = global_position
+	set_group("entity")
+	$RayCast2D.add_exception($CollisionShape2D)
 	#GameState.connect("enemy_turn", self, "my_turn")
 	pass
+
+func hurt(damage:int):
+	hp-= damage
+	if hp <= 0:
+		die()
+
+func die():
+	queue_free()
 
 func player_next_to_me():
 	var previousState = state
@@ -71,13 +86,17 @@ func set_position(pos):
 	trueposition = pos
 	global_position = pos
 
-func _process(delta):
+func _process(_delta):
 	$CollisionShape2D.global_position = trueposition
 
 func move(dir:Vector2):
-	var colls = get_world_2d().direct_space_state.intersect_point(trueposition+dir*get_parent().get_parent().tile_size + Vector2(1,1), 2)
+	var colls = get_world_2d().direct_space_state.intersect_point(trueposition + dir*get_parent().get_parent().tile_size + Vector2(4,4), 2)
+	#print("Here's everything I'd collide with at")
+	#print(trueposition + dir*get_parent().get_parent().tile_size)
+	#if colls.size() != 0:
+	#	print(colls[0]["collider"].name)
 	if colls.size() == 0 and dir.length() > 0:
-		trueposition += dir*16
+		trueposition += dir*get_parent().get_parent().tile_size
 		$Tween.interpolate_property(self, "global_position", global_position, trueposition, 0.2, Tween.TRANS_SINE, Tween.EASE_IN_OUT)
 		$Tween.start()
 
@@ -92,8 +111,10 @@ func can_i_see_you() -> bool:
 		if cooldown == 0:
 			state = aiState.idle
 	else:
-		$RayCast2D.cast_to = GameState.player.global_position+Vector2(8,8)
+		$RayCast2D.cast_to = GameState.player.trueposition - trueposition + Vector2(4,4)
 		$RayCast2D.force_raycast_update()
+		yield(get_tree(),"idle_frame")
+		print($RayCast2D.get_collider())
 		if $RayCast2D.get_collider() == GameState.player:
 			state = aiState.angry
 			cooldown = cooldownMax
@@ -101,8 +122,7 @@ func can_i_see_you() -> bool:
 			if cooldown == 0:
 				state = aiState.idle
 	if state != previousState:
-		if $AnimationPlayer.is_playing():
-			$AnimationPlayer.stop()
+		$AnimationPlayer.stop(true)
 		$AnimationPlayer.play("StatusChanged")
 	if state == aiState.angry:
 		return true
@@ -120,7 +140,7 @@ func my_turn():
 	behaviourValue+=1
 	behaviourValue %= sequenceUsed.length()
 	cooldown -= 1
-	can_i_see_you()
+	var _seen = can_i_see_you()
 	if state == aiState.idle:
 		var action = sequenceUsed[behaviourValue]
 		AiLib.call(aiBehaviours[action], self)

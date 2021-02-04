@@ -2,6 +2,8 @@ extends StaticBody2D
 
 const RenderClass = preload("res://Util/Render.gd")
 
+onready var atkAnim = $AttackAnims
+
 var input_dir : Vector2
 var trueposition : Vector2
 var areaCollisions : Dictionary = {
@@ -17,12 +19,18 @@ func _ready()->void:
 	trueposition = global_position
 	GameState.player = self
 	yield(get_tree(),"idle_frame")
+	
 	if GameState.map != null:
 		set_camera_limit(GameState.map.bias.x*GameState.map.tile_size, GameState.map.bias.y*GameState.map.tile_size)
+	PlayerState.player = self
 
 func set_camera_limit(width:int, height:int):
 	$Camera2D.limit_right = width
 	$Camera2D.limit_bottom = height
+
+func hurt(damage):
+	PlayerState.current_hp -= 1
+	GameState.request_render(RenderClass.renderTarget.STATUS)
 
 func on_exit() -> bool:
 	return areaCollisions["exit"]
@@ -33,7 +41,7 @@ func set_position(pos:Vector2):
 
 func _process(_delta)->void:
 	ownArea.global_position = trueposition
-	$CollisionShape2D.global_position = trueposition
+	$CollisionShape2D.global_position = trueposition + Vector2(8,8)
 	process_input()
 	if GameState.turns_remaining != 0:
 		process_movement()
@@ -49,7 +57,7 @@ func process_input()->void:
 		GameState.request_render(RenderClass.renderTarget.ACTIONS)
 
 func process_movement()->void:
-	var colls = get_world_2d().direct_space_state.intersect_point(trueposition+input_dir*get_parent().tile_size + Vector2(1,1), 2)
+	var colls = get_world_2d().direct_space_state.intersect_point(trueposition+input_dir*get_parent().tile_size + Vector2(4,4), 2) # Vector2(4, 4) is in case it's not an exact bounding box
 	# perform movement
 	if (colls.size() == 0 or PlayerState.is_effect(PlayerState.effects.PHASE)) and input_dir.length() > 0:
 		trueposition += input_dir*16
@@ -57,6 +65,19 @@ func process_movement()->void:
 		$Tween.start()
 		GameState.turn_elapsed()
 		GameState.request_render(RenderClass.renderTarget.ACTIONS)
+	if input_dir.length() > 0 and colls.size() > 0 and "entity" in colls[0]["collider"].get_groups():
+		if colls[0]["collider"].has_method("hurt"):
+			colls[0]["collider"].hurt(PlayerState.current_damage)
+		atkAnim.stop(true)
+		match input_dir:
+			Vector2.UP:
+				atkAnim.play("atk_up")
+			Vector2.DOWN:
+				atkAnim.play("atk_down")
+			Vector2.LEFT:
+				atkAnim.play("atk_left")
+			Vector2.RIGHT:
+				atkAnim.play("atk_right")
 
 
 func _on_Area2D_area_entered(area):

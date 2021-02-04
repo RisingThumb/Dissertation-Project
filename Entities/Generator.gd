@@ -75,7 +75,7 @@ func populate_world(rooms:bool=false) -> void:
 					for enemy in enemies:
 						randomize()
 						if randf() < enemy.get("probability"):
-							print(enemy)
+							#print(enemy)
 							var entityId = Ai.get_id_by_name(enemy.get("name"))
 							var entityData = Ai.get_entity_data(entityId)
 							var newEntity = Entity.instance()
@@ -96,7 +96,6 @@ func make_start_to_end_path():
 	var first = true
 	var continue_at_other_end = false
 	var other_point = null
-	var split_point = -1
 	while(!(current in roomsInPath)):
 		roomsInPath.append(current)
 		var possible_connections: Array = []
@@ -164,7 +163,7 @@ func random_air():
 # Functions flood_fill and dig_caves based on below tutorial
 # https://abitawake.com/news/articles/procedural-generation-with-godot-creating-caves-with-cellular-automata
 func dig_caves(iterations:int = 23000, neighbours:int = 4):
-	for i in range(iterations):
+	for _i in range(iterations):
 		var x = floor(rand_range(1, bias.x-1))
 		var y = floor(rand_range(1, bias.y-1))
 		if check_nearby(x, y) > neighbours:

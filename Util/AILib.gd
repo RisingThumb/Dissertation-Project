@@ -24,7 +24,21 @@ func idle(AIRef: EntityClass):
 	pass # This is intended pass
 
 func bite(AIRef: EntityClass):
-	pass
+	var p = PlayerState.get_player()
+	if p == null:
+		return move_to_player(AIRef)
+	var dir = (p.trueposition - AIRef.trueposition)/GameState.tile_size
+	match dir:
+		Vector2.UP:
+			AIRef.atkAnim.play("atk_up")
+		Vector2.DOWN:
+			AIRef.atkAnim.play("atk_down")
+		Vector2.LEFT:
+			AIRef.atkAnim.play("atk_left")
+		Vector2.RIGHT:
+			AIRef.atkAnim.play("atk_right")
+	if p.has_method("hurt"):
+		p.hurt(AIRef.damage)
 
 func chess_knight(AIRef: EntityClass):
 	var move=Vector2(1,2)

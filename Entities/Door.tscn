@@ -1,11 +1,14 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Util/TextureSprite.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Entities/Door.gd" type="Script" id=2]
 [ext_resource path="res://Util/AIComponents/NextToDetect.tscn" type="PackedScene" id=3]
 
-[sub_resource type="RectangleShape2D" id=2]
+[sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 7, 7 )
+
+[sub_resource type="OccluderPolygon2D" id=2]
+polygon = PoolVector2Array( 0, 0, 16, 0, 16, 16, 0, 16 )
 
 [node name="Door" type="StaticBody2D" groups=[
 "door",
@@ -19,4 +22,7 @@ frame = 140
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 8, 8 )
-shape = SubResource( 2 )
+shape = SubResource( 1 )
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource( 2 )

@@ -8,6 +8,8 @@ const MAX_SANITY : int = 8
 var current_hp : int
 var current_stamina : int
 var current_sanity : int
+var current_damage: int = 1
+var player = null
 
 const INVENTORY_SIZE : int = 20
 var inventory:Array = []
@@ -21,6 +23,9 @@ enum effects {
 
 # Index is effect name, Value is effect duration
 var status_effects = []
+
+func get_player():
+	return player
 
 func is_effect(effect: int)-> bool:
 	return status_effects[effect] != 0

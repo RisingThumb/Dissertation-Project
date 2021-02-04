@@ -1,5 +1,6 @@
 extends Node
 
+var tile_size = 16
 var elapsed : int
 var turns_remaining : int
 var start_turns = 3
@@ -10,7 +11,7 @@ var render: RenderClass = null
 var map: GeneratorClass = null
 var player: PlayerClass = null
 signal enemy_turn
-signal player_turn
+#signal player_turn
 
 func _ready() -> void:
 	elapsed = 0
@@ -74,6 +75,7 @@ func turn_elapsed()->void:
 	turns_remaining -= 1
 	elapsed += 1
 	if turns_remaining == 0:
+		yield(get_tree(),"idle_frame")
 		emit_signal("enemy_turn")
 		turns_remaining = start_turns
 	request_render(RenderClass.renderTarget.TURNS)
