@@ -11,8 +11,11 @@ var blind = false
 var cooldownMax = 5
 var cooldown = 0
 var hp = 3
+var maxhp
+var stunned = false
 onready var atkAnim = $AttackAnims
 onready var nextToItAreas = $NextToDetect
+onready var hurtAnim = $HurtAnims
 var damage = 1
 
 enum aiState {
@@ -31,8 +34,17 @@ func _ready():
 
 func hurt(damage:int):
 	hp-= damage
+	hurtAnim.stop(true)
+	hurtAnim.play("Hurt")
 	if hp <= 0:
 		die()
+	if hp > maxhp:
+		hp = maxhp
+
+func stun():
+	stunned = true
+	$AnimationPlayer.stop(true)
+	$AnimationPlayer.play("Stunned")
 
 func die():
 	queue_free()
@@ -50,10 +62,14 @@ func set_from_data(data: Dictionary):
 	set_group(data.get("group"))
 	set_behaviour_sequence(data.get("sequence"))
 	set_behaviours(data.get("behaviours"))
-	set_angry_behaviour_sequence(data.get("angrySequence"))
 	set_angry_behaviours(data.get("angryBehaviours"))
+	hp = data.get("hp")
+	maxhp = hp
 	blind = data.get("blind")
 	cooldownMax = data.get("stateCooldown")
+
+func polymorph():
+	print("I should morph!")
 
 func set_collision(col:bool):
 	$CollisionShape2D.disabled = !col
@@ -91,10 +107,6 @@ func _process(_delta):
 
 func move(dir:Vector2):
 	var colls = get_world_2d().direct_space_state.intersect_point(trueposition + dir*get_parent().get_parent().tile_size + Vector2(4,4), 2)
-	#print("Here's everything I'd collide with at")
-	#print(trueposition + dir*get_parent().get_parent().tile_size)
-	#if colls.size() != 0:
-	#	print(colls[0]["collider"].name)
 	if colls.size() == 0 and dir.length() > 0:
 		trueposition += dir*get_parent().get_parent().tile_size
 		$Tween.interpolate_property(self, "global_position", global_position, trueposition, 0.2, Tween.TRANS_SINE, Tween.EASE_IN_OUT)
@@ -114,7 +126,6 @@ func can_i_see_you() -> bool:
 		$RayCast2D.cast_to = GameState.player.trueposition - trueposition + Vector2(4,4)
 		$RayCast2D.force_raycast_update()
 		yield(get_tree(),"idle_frame")
-		print($RayCast2D.get_collider())
 		if $RayCast2D.get_collider() == GameState.player:
 			state = aiState.angry
 			cooldown = cooldownMax
@@ -136,7 +147,15 @@ func set_status_sprite():
 		$StatusSprite.frame = 48
 		$StatusSprite.modulate = Color.yellow
 
+func set_status_stunned():
+	$StatusSprite.frame = 349
+	$StatusSprite.modulate = Color.yellow
+
 func my_turn():
+	if stunned:
+		stunned = false
+		AiLib.call("idle", self)
+		return
 	behaviourValue+=1
 	behaviourValue %= sequenceUsed.length()
 	cooldown -= 1
@@ -145,5 +164,5 @@ func my_turn():
 		var action = sequenceUsed[behaviourValue]
 		AiLib.call(aiBehaviours[action], self)
 	elif state == aiState.angry:
-		var action = angrySequenceUsed[behaviourValue]
+		var action = sequenceUsed[behaviourValue]
 		AiLib.call(aiAngryBehaviours[action], self)

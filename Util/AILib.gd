@@ -18,7 +18,20 @@ func move_random(AIRef: EntityClass):
 	AIRef.move(move)
 
 func move_to_player(AIRef: EntityClass):
-	pass
+	var bestMove = Vector2(0, 0)
+	if GameState.player == null:
+		return
+	var closestDist = -1
+	var possibleMoves = [Vector2.UP, Vector2.DOWN, Vector2.LEFT, Vector2.RIGHT]
+	for move in possibleMoves:
+		if closestDist == -1:
+			closestDist = (AIRef.trueposition + move*GameState.tile_size).distance_to(GameState.player.trueposition)
+			bestMove = move
+			continue
+		if (AIRef.trueposition + move*GameState.tile_size).distance_to(GameState.player.trueposition) < closestDist:
+			closestDist = (AIRef.trueposition + move*GameState.tile_size).distance_to(GameState.player.trueposition)
+			bestMove = move
+	AIRef.move(bestMove)
 
 func idle(AIRef: EntityClass):
 	pass # This is intended pass
@@ -37,8 +50,9 @@ func bite(AIRef: EntityClass):
 			AIRef.atkAnim.play("atk_left")
 		Vector2.RIGHT:
 			AIRef.atkAnim.play("atk_right")
-	if p.has_method("hurt"):
-		p.hurt(AIRef.damage)
+	if p.trueposition.distance_to(AIRef.trueposition) < GameState.tile_size+4:
+		if p.has_method("hurt"):
+			p.hurt(AIRef.damage)
 
 func chess_knight(AIRef: EntityClass):
 	var move=Vector2(1,2)

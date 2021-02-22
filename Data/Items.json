@@ -144,6 +144,276 @@
             }
         }
     ]
+    },
+    {
+    "name":"Zap Spell",
+    "desc":"Hurts enemies around you for 2 damage. Range of 1m. -2 Sanity.",
+    "id":null,
+    "spell": true,
+    "data":{},
+    "functions":[
+        {
+        "name":"Zap",
+        "function":"spell",
+        "parameters": {
+            "damage": 2,
+            "mana_cost": 2,
+            "spell_name": "spell_zap"
+            }
+        }
+    ]
+    },
+    {
+    "name":"Stun Spell",
+    "desc":"This stuns all enemies in a 1 tile radius around the player for their next turn.",
+    "id":null,
+    "spell": true,
+    "data":{},
+    "functions":[
+        {
+        "name":"Stun",
+        "function":"spell",
+        "parameters": {
+            "damage": 2,
+            "mana_cost": 2,
+            "spell_name": "spell_stun"
+            }
+        }
+    ]
+    },
+    {
+    "name":"Lighting Spell",
+    "desc":"This doubles the light radius for this floor. -2 Sanity.",
+    "id":null,
+    "spell": true,
+    "data":{},
+    "functions":[
+        {
+        "name":"Light",
+        "function":"spell",
+        "parameters": {
+            "damage": 2,
+            "mana_cost": 2,
+            "spell_name": "spell_light"
+            }
+        }
+    ]
+    },
+    {
+    "name":"Magic Missile Spell",
+    "desc":"Fires a missile for 3 damage. Range of 11m. -2 Sanity.",
+    "id":null,
+    "spell": true,
+    "data":{},
+    "functions":[
+        {
+        "name":"Fire Missile Up",
+        "function":"spell",
+        "parameters": {
+            "damage": 2,
+            "mana_cost": 2,
+            "spell_name": "spell_missile_up"
+            }
+        },
+        {
+        "name":"Fire Missile Down",
+        "function":"spell",
+        "parameters": {
+            "damage": 2,
+            "mana_cost": 2,
+            "spell_name": "spell_missile_down"
+            }
+        },
+        {
+        "name":"Fire Missile Left",
+        "function":"spell",
+        "parameters": {
+            "damage": 2,
+            "mana_cost": 2,
+            "spell_name": "spell_missile_left"
+            }
+        },
+        {
+        "name":"Fire Missile Right",
+        "function":"spell",
+        "parameters": {
+            "damage": 2,
+            "mana_cost": 2,
+            "spell_name": "spell_missile_right"
+            }
+        }
+    ]
+    },
+    {
+    "name":"Opening Spell",
+    "desc":"This opens locked doors. Range of 1m. -1 Sanity.",
+    "id":null,
+    "spell": true,
+    "data":{},
+    "functions":[
+        {
+        "name":"Open and unlock nearby",
+        "function":"spell",
+        "parameters": {
+            "damage": 2,
+            "mana_cost": 1,
+            "spell_name": "spell_open"
+            }
+        }
+    ]
+    },
+    {
+    "name":"Healing Spell",
+    "desc":"Heals everythin within 1m for 2. -2 Sanity",
+    "id":null,
+    "spell": true,
+    "data":{},
+    "functions":[
+        {
+        "name":"Heal",
+        "function":"spell",
+        "parameters": {
+            "damage": 2,
+            "mana_cost": 2,
+            "spell_name": "spell_heal"
+            }
+        }
+    ]
+    },
+    {
+    "name":"Polymorph Spell",
+    "desc":"This polymorphs the enemy hit. Range of 5m. -1 Sanity.",
+    "id":null,
+    "spell": true,
+    "data":{},
+    "functions":[
+        {
+        "name":"Polymorph Up",
+        "function":"spell",
+        "parameters": {
+            "damage": 2,
+            "mana_cost": 1,
+            "spell_name": "spell_polymorph_up"
+            }
+        },
+        {
+        "name":"Polymorph Left",
+        "function":"spell",
+        "parameters": {
+            "damage": 2,
+            "mana_cost": 1,
+            "spell_name": "spell_polymorph_left"
+            }
+        },
+        {
+        "name":"Polymorph Down",
+        "function":"spell",
+        "parameters": {
+            "damage": 2,
+            "mana_cost": 1,
+            "spell_name": "spell_polymorph_down"
+            }
+        },
+        {
+        "name":"Polymorph Right",
+        "function":"spell",
+        "parameters": {
+            "damage": 2,
+            "mana_cost": 1,
+            "spell_name": "spell_polymorph_right"
+            }
+        }
+    ]
+    },
+    {
+    "name":"Teleportation",
+    "desc":"Teleports randomly. -2 Sanity.",
+    "id":null,
+    "spell": true,
+    "data":{},
+    "functions":[
+        {
+        "name":"Teleport",
+        "function":"spell",
+        "parameters": {
+            "damage": 2,
+            "mana_cost": 2,
+            "spell_name": "spell_teleport"
+            }
+        }
+    ]
+    },
+    {
+    "name":"Digging Spell",
+    "desc":"Destroys all walls and doors. Range of 1m. -2 Sanity.",
+    "id":null,
+    "spell": true,
+    "data":{},
+    "functions":[
+        {
+        "name":"Dig",
+        "function":"spell",
+        "parameters": {
+            "damage": 2,
+            "mana_cost": 2,
+            "spell_name": "spell_dig"
+            }
+        }
+    ]
+    },
+    {
+    "name":"Quantum Spell",
+    "desc":"Half of the walls in a level become air. -3 Sanity",
+    "id":null,
+    "spell": true,
+    "data":{},
+    "functions":[
+        {
+        "name":"Transform",
+        "function":"spell",
+        "parameters": {
+            "damage": 2,
+            "mana_cost": 3,
+            "spell_name": "spell_transform"
+            }
+        }
+    ]
+    },
+    {
+    "name":"Speed Spell",
+    "desc":"You have 1 extra action this turn. -1 Sanity.",
+    "id":null,
+    "spell": true,
+    "data":{},
+    "functions":[
+        {
+        "name":"Speed up",
+        "function":"spell",
+        "parameters": {
+            "damage": 2,
+            "mana_cost": 1,
+            "spell_name": "spell_speed"
+            }
+        }
+    ]
+    },
+    {
+    "name":"The Yellow Sign",
+    "desc":"All enemies around you instantly die. -5 Sanity. -1 max Sanity.",
+    "id":null,
+    "spell": true,
+    "data":{},
+    "functions":[
+        {
+        "name":"Hastur...",
+        "function":"spell",
+        "parameters": {
+            "damage": 2,
+            "mana_cost": 5,
+            "spell_name": "spell_death"
+            }
+        }
+    ]
     }
-]
+    ]
 }

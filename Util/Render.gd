@@ -10,14 +10,19 @@ enum renderTarget {
 	ACTIONS
 }
 
+var items = []
+
 # Get some essential UI nodes
-onready var turns = $Control/HBoxContainer/VBoxContainer/Turns/MarginContainer/VBoxContainer
-onready var inventory = $Control/HBoxContainer/VBoxContainer/Inventory/MarginContainer/VBoxContainer
-onready var status = $Control/HBoxContainer/VBoxContainer/Status/MarginContainer/VBoxContainer
+onready var turns = $Control/HBoxContainer/VBoxContainer/Turns/Turns/MarginContainer/VBoxContainer
+onready var inventory = $Control/HBoxContainer/VBoxContainer/Inventory/Inventory/MarginContainer/VBoxContainer
+onready var status = $Control/HBoxContainer/VBoxContainer/Status/Status/MarginContainer/VBoxContainer
 onready var effects = $Control/HBoxContainer/MarginContainer/EffectsAndActions/Effect
 onready var actions = $Control/HBoxContainer/MarginContainer/EffectsAndActions/Action
 onready var room_title = $Control/MarginContainer/RoomTitle
 onready var parent_container = $Control/HBoxContainer
+onready var choice1Container = $Control/Choice/VBoxContainer2/HBoxContainer/SpellChoice
+onready var choice2Container = $Control/Choice/VBoxContainer2/HBoxContainer/SpellChoice2
+onready var choice3Container = $Control/Choice/VBoxContainer2/HBoxContainer/SpellChoice3
 
 var itemButton = preload("res://Util/UI/BarComponent.tscn")
 var effect = preload("res://Util/UI/EffectComponent.tscn")
@@ -31,6 +36,7 @@ var sanityPrefix = "SANITY:"
 var currently_selected = -1
 
 func _ready():
+	$Control/Choice.visible = false
 	GameState.render = self
 	# Redraw all
 	for i in renderTarget.values():
@@ -83,6 +89,26 @@ func draw_actions(itemId: int) -> void:
 	currently_selected = itemId
 	redraw_actions()
 
+func present_choices(visible: bool):
+	$Control/Choice.visible = visible
+	$Control/MarginContainer.visible = !visible
+	$Control/ViewportContainer.visible = !visible
+	$Control/HBoxContainer.visible = !visible
+	get_tree().paused = visible
+	if visible:
+		set_choices()
+
+func set_choices():
+	items = Item.get_spells()
+	items.shuffle()
+	var choices = [choice1Container, choice2Container, choice3Container]
+	for i in range(3):
+		if items.size() < i+1:
+			break
+		var item = items[i]
+		choices[i].get_node("MarginContainer/VBoxContainer/SpellName").text = item["name"]
+		choices[i].get_node("MarginContainer/VBoxContainer/SpellDesc").text = item["desc"]
+
 func redraw_actions() -> void:
 	dump_vbox(actions)
 	var functions = Item.get_functions_by_id(currently_selected)
@@ -108,3 +134,21 @@ func numToI(number: int) -> String:
 func _notification(notification):
 	if notification == NOTIFICATION_PREDELETE:
 		GameState.render = null
+
+
+func _on_SpellChoice1_pressed():
+	present_choices(false)
+	PlayerState.inventory.append(Item.get_item_by_name(items[0]["name"]))
+	GameState.request_render(renderTarget.INVENTORY)
+
+
+func _on_SpellChoice2_pressed():
+	present_choices(false)
+	PlayerState.inventory.append(Item.get_item_by_name(items[1]["name"]))
+	GameState.request_render(renderTarget.INVENTORY)
+
+
+func _on_SpellChoice3_pressed():
+	present_choices(false)
+	PlayerState.inventory.append(Item.get_item_by_name(items[2]["name"]))
+	GameState.request_render(renderTarget.INVENTORY)

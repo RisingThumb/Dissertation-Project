@@ -56,3 +56,16 @@ func gen(parameters: Dictionary)->void:
 	if GameState.map == null:
 		return
 	GameState.map.call(parameters.get("algorithm"))
+
+func spell(parameters: Dictionary)->void:
+	var spell = parameters.get("spell_name")
+	var sanityCost = parameters.get("mana_cost")
+	var damage = parameters.get("damage")
+	var canDo = PlayerState.change_sanity(-sanityCost)
+	if canDo:
+		#if PlayerState.has_method(str(spell)):
+		PlayerState.player.call(str(spell))
+		#else:
+		#	print(spell + " needs implementing!")
+	#PlayerState.change_sanity(2);
+	#Handle casting

@@ -15,6 +15,9 @@ func close_door():
 	$TextureSprite.frame = closed_frame
 	$CollisionShape2D.disabled = false
 
+func dig():
+	queue_free()
+
 func open_door():
 	open = true
 	$TextureSprite.frame = open_frame

@@ -1,0 +1,33 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Assets/DitheredLightMask.png" type="Texture" id=1]
+
+[sub_resource type="Animation" id=1]
+resource_name = "LightMove"
+length = 1.5
+loop = true
+step = 0.25
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:offset")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.25, 0.5, 0.75, 1, 1.25, 1.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ Vector2( 8, 8 ), Vector2( 5, 5 ), Vector2( 5.6, 13 ), Vector2( 10, 7 ), Vector2( 10, 5 ), Vector2( 6, 6 ), Vector2( 8, 8 ) ]
+}
+
+[node name="Light2D" type="Light2D"]
+texture = ExtResource( 1 )
+offset = Vector2( 10, 5 )
+texture_scale = 2.05
+color = Color( 0.992157, 0.992157, 0.992157, 1 )
+mode = 2
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "LightMove"
+playback_speed = 2.0
+anims/LightMove = SubResource( 1 )

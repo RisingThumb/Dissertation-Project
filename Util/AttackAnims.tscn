@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=2]
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=1]
 resource_name = "atk_down"
 length = 0.6
 tracks/0/type = "value"
@@ -16,7 +16,7 @@ tracks/0/keys = {
 "values": [ Vector2( 0, 0 ), Vector2( 0, 12 ), Vector2( 0, 0 ) ]
 }
 
-[sub_resource type="Animation" id=3]
+[sub_resource type="Animation" id=2]
 resource_name = "atk_left"
 length = 0.6
 tracks/0/type = "value"
@@ -32,7 +32,7 @@ tracks/0/keys = {
 "values": [ Vector2( 0, 0 ), Vector2( -12, 0 ), Vector2( 0, 0 ) ]
 }
 
-[sub_resource type="Animation" id=4]
+[sub_resource type="Animation" id=3]
 resource_name = "atk_right"
 length = 0.6
 tracks/0/type = "value"
@@ -48,7 +48,7 @@ tracks/0/keys = {
 "values": [ Vector2( 0, 0 ), Vector2( 12, 0 ), Vector2( 0, 0 ) ]
 }
 
-[sub_resource type="Animation" id=5]
+[sub_resource type="Animation" id=4]
 resource_name = "atk_up"
 length = 0.6
 tracks/0/type = "value"
@@ -66,7 +66,7 @@ tracks/0/keys = {
 
 [node name="AttackAnims" type="AnimationPlayer"]
 playback_speed = 1.6
-anims/atk_down = SubResource( 6 )
-anims/atk_left = SubResource( 3 )
-anims/atk_right = SubResource( 4 )
-anims/atk_up = SubResource( 5 )
+anims/atk_down = SubResource( 1 )
+anims/atk_left = SubResource( 2 )
+anims/atk_right = SubResource( 3 )
+anims/atk_up = SubResource( 4 )

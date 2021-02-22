@@ -11,12 +11,13 @@
         "a":"move_to_player",
         "b":"move_random"
         },
-    "sequence":"abbab",
+    "sequence":"ab",
     "angryBehaviours": {
-        "a": "idle"
+        "a": "bite",
+        "b": "move_to_player"
     },
-    "angrySequence": "aaaaa",
-    "stateCooldown":2
+    "stateCooldown":2,
+    "hp": 2
     },
     {
     "name":"Bat",
@@ -32,8 +33,8 @@
     "angryBehaviours": {
         "a": "bite"
         },
-    "angrySequence": "a",
-    "stateCooldown":3
+    "stateCooldown":3,
+    "hp": 2
     },
     {
     "name":"Unicorn",
@@ -49,10 +50,12 @@
         },
     "sequence": "abbcba",
     "angryBehaviours": {
-        "a": "idle"
+        "a": "chess_knight",
+        "b": "bite",
+        "c": "move_to_player"
     },
-    "angrySequence": "aaaaaa",
-    "stateCooldown":4
+    "stateCooldown":4,
+    "hp":5
     }
 ]
 }

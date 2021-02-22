@@ -5,6 +5,7 @@ const RenderClass = preload("res://Util/Render.gd")
 const MAX_HP : int = 12
 const MAX_STAMINA : int = 7
 const MAX_SANITY : int = 8
+var current_max_sanity : int = MAX_SANITY
 var current_hp : int
 var current_stamina : int
 var current_sanity : int
@@ -57,6 +58,18 @@ func _ready():
 	current_stamina = MAX_STAMINA
 	inventory.append(Item.get_item_by_name("Demonicron"))
 	inventory.append(Item.get_item_by_name("Book of Terrain"))
+	inventory.append(Item.get_item_by_name("Zap Spell"))
+	inventory.append(Item.get_item_by_name("Stun Spell"))
+	inventory.append(Item.get_item_by_name("Healing Spell"))
+	inventory.append(Item.get_item_by_name("Teleportation"))
+	inventory.append(Item.get_item_by_name("Speed Spell"))
+	inventory.append(Item.get_item_by_name("Opening Spell"))
+	inventory.append(Item.get_item_by_name("Digging Spell"))
+	inventory.append(Item.get_item_by_name("Quantum Spell"))
+	inventory.append(Item.get_item_by_name("The Yellow Sign"))
+	inventory.append(Item.get_item_by_name("Lighting Spell"))
+	inventory.append(Item.get_item_by_name("Magic Missile Spell"))
+	inventory.append(Item.get_item_by_name("Polymorph Spell"))
 	for _i in range(effects.EFFECT_NUMBER):
 		status_effects.append(0)
 
@@ -72,11 +85,14 @@ func change_stamina(amount : int) -> void:
 		current_stamina = MAX_STAMINA
 	GameState.request_render(RenderClass.renderTarget.STATUS)
 
-func change_sanity(amount : int) -> void:
+func change_sanity(amount : int) -> bool:
+	if current_sanity + amount < 0:
+		return false
 	current_sanity += amount
-	if current_sanity > MAX_SANITY:
-		current_sanity = MAX_SANITY
+	if current_sanity > current_max_sanity:
+		current_sanity = current_max_sanity
 	GameState.request_render(RenderClass.renderTarget.STATUS)
+	return true
 
 func get_hp() -> int:
 	return current_hp

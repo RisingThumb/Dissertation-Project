@@ -3,7 +3,7 @@ extends Node
 var tile_size = 16
 var elapsed : int
 var turns_remaining : int
-var start_turns = 3
+var start_turns = 2
 const RenderClass = preload("res://Util/Render.gd")
 const GeneratorClass = preload("res://Entities/Generator.gd")
 const PlayerClass = preload("res://Entities/Player.gd")

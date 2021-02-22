@@ -23,6 +23,14 @@ func get_item_by_name(itemName:String) -> int :
 		return int(nameToIdMap[itemName])
 	return -1
 
+func get_spells() -> Array:
+	var itemArray = []
+	for item in items["items"]:
+		if item.has("spell") and item["spell"]:
+			itemArray.append(item)
+	return itemArray
+
+
 func get_name_by_id(id:int):
 	return items["items"][id-1]["name"]
 

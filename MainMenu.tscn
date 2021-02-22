@@ -1,0 +1,247 @@
+[gd_scene load_steps=14 format=2]
+
+[ext_resource path="res://Menu/Display.gd" type="Script" id=1]
+[ext_resource path="res://Assets/pal.png" type="Texture" id=2]
+[ext_resource path="res://Assets/title.png" type="Texture" id=3]
+[ext_resource path="res://Util/UI/CustomButton.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Assets/DynamicFont-Gui.tres" type="DynamicFont" id=5]
+[ext_resource path="res://MainMenu.gd" type="Script" id=6]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+
+// Controlled from GDscript
+uniform sampler2D palette;
+uniform float px = 2.0;
+uniform float doBottom = 1.0;
+
+// Kinda random I guess?
+int random(vec2 co, float threshold) {
+	return int(step(fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453) ,threshold));
+}
+
+// We have a palette texture. It has 36 colours in it. We use it to get the palette colour
+// Done since Godot has no array
+vec3 getFireColour(int a) {
+	return texture(palette, vec2(float(a)/36.0, 0.5)).rgb;
+}
+
+// get the palette index from a colour. 0 if none.
+int getFireIndex(vec3 col) {
+	for(int x = 0; x <= 36; x++) {
+		if (col == getFireColour(x)) {
+			return int(x);
+		}
+	}
+	return 0;
+}
+
+vec4 getColor(vec4 cc, float time, vec2 uv, vec2 sz, in sampler2D tex) {
+	// Bottom line is the brightest and hottest
+	float bottom = step(1.0-sz.y, uv.y);
+	vec4 bottomCol = vec4(getFireColour(36), 1.0) * float(bottom) * doBottom;
+	// Horizontal movement, flicker of the flames
+	float randx = float(random(vec2(uv.x+time, uv.y+time), 0.2));
+	uv += vec2(randx, 1.) * sz*px;
+	uv.x = mod(uv.x, 1.0);
+	
+	vec3 col = texture(tex, uv).rgb;
+	int belowIndex = getFireIndex(col);
+	vec4 prospectiveCol = vec4(getFireColour(belowIndex - random(vec2(uv.x+time, uv.y+time), 0.5 )) , 1.0);//*float(1.bottom);
+	return bottomCol + prospectiveCol;
+}
+
+void fragment() {
+
+	vec2 uv = SCREEN_UV;
+	vec2 sz = SCREEN_PIXEL_SIZE;
+
+	COLOR = getColor(texture(TEXTURE, uv), TIME, uv, sz, TEXTURE);
+}"
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = SubResource( 1 )
+shader_param/px = 2.0
+shader_param/doBottom = 1.0
+shader_param/palette = ExtResource( 2 )
+
+[sub_resource type="ViewportTexture" id=3]
+viewport_path = NodePath("Viewport")
+
+[sub_resource type="ViewportTexture" id=4]
+viewport_path = NodePath("Viewport")
+
+[sub_resource type="Animation" id=5]
+resource_name = "Start"
+length = 10.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("Viewport/Sprite:material:shader_param/doBottom")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 9 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 1.0, 0.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Control:rect_position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 7.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 640 ), Vector2( 0, 0 ) ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath("Start")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 8 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [ "TitleMove", -1, 1.0, false ],
+"method": "play"
+} ]
+}
+
+[sub_resource type="Animation" id=6]
+resource_name = "TitleMove"
+length = 4.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Control/VBoxContainer/MarginContainer/TextureRect:rect_scale")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1, 2, 3 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 1.1, 1.1 ), Vector2( 1, 1 ), Vector2( 1.1, 1.1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Control/VBoxContainer/MarginContainer/TextureRect:rect_rotation")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 1, 3 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, 5.0, -5.0 ]
+}
+
+[sub_resource type="StyleBoxFlat" id=7]
+draw_center = false
+
+[node name="MainMenu" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Viewport" type="Viewport" parent="."]
+size = Vector2( 320, 180 )
+transparent_bg = true
+handle_input_locally = false
+usage = 0
+render_target_clear_mode = 2
+render_target_update_mode = 3
+
+[node name="Sprite" type="Sprite" parent="Viewport"]
+material = SubResource( 2 )
+scale = Vector2( 4, 4 )
+texture = SubResource( 3 )
+
+[node name="Display" type="TextureRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = SubResource( 4 )
+expand = true
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Start" type="AnimationPlayer" parent="."]
+autoplay = "Start"
+anims/Start = SubResource( 5 )
+anims/TitleMove = SubResource( 6 )
+
+[node name="Control" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 640.0
+margin_bottom = 640.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/VBoxContainer"]
+margin_top = 108.0
+margin_right = 640.0
+margin_bottom = 208.0
+
+[node name="TextureRect" type="TextureRect" parent="Control/VBoxContainer/MarginContainer"]
+margin_left = 220.0
+margin_right = 420.0
+margin_bottom = 100.0
+rect_pivot_offset = Vector2( 110, 50 )
+size_flags_horizontal = 4
+size_flags_vertical = 3
+texture = ExtResource( 3 )
+
+[node name="CustomButton" parent="Control/VBoxContainer" instance=ExtResource( 4 )]
+margin_left = 303.0
+margin_top = 212.0
+margin_right = 337.0
+margin_bottom = 224.0
+size_flags_horizontal = 4
+text = "Enter"
+
+[node name="CustomButton5" type="Label" parent="Control/VBoxContainer"]
+margin_left = 146.0
+margin_top = 228.0
+margin_right = 494.0
+margin_bottom = 252.0
+grow_horizontal = 0
+grow_vertical = 0
+rect_min_size = Vector2( 0, 12 )
+rect_clip_content = true
+size_flags_horizontal = 4
+size_flags_vertical = 0
+custom_styles/normal = SubResource( 7 )
+custom_fonts/font = ExtResource( 5 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "Controls: WASD to move
+          Mouse to interact
+Seize the unholy grail and drink 666ml to regain your mind"
+[connection signal="pressed" from="Control/VBoxContainer/CustomButton" to="." method="_on_CustomButton_pressed"]

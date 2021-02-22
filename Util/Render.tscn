@@ -1,12 +1,14 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Entities/World.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Assets/NinePatch.png" type="Texture" id=2]
 [ext_resource path="res://Assets/DynamicFont-Gui.tres" type="DynamicFont" id=3]
 [ext_resource path="res://Util/UI/EffectComponent.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Util/Render.gd" type="Script" id=5]
+[ext_resource path="res://Util/UI/CustomButton.tscn" type="PackedScene" id=6]
 
 [node name="Render" type="Node"]
+pause_mode = 2
 script = ExtResource( 5 )
 
 [node name="Control" type="Control" parent="."]
@@ -22,17 +24,19 @@ anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = -18.0
-margin_right = -106.0
+margin_right = -160.0
 size_flags_horizontal = 0
 size_flags_vertical = 0
+custom_constants/margin_left = 6
 custom_constants/margin_bottom = 6
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="RoomTitle" parent="Control/MarginContainer" instance=ExtResource( 4 )]
+margin_left = 6.0
 margin_top = 0.0
-margin_right = 534.0
+margin_right = 480.0
 margin_bottom = 12.0
 mouse_filter = 2
 text = "Testing"
@@ -42,7 +46,7 @@ align = 1
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = 6.0
-margin_right = -106.0
+margin_right = -160.0
 margin_bottom = -18.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -55,12 +59,13 @@ __meta__ = {
 }
 
 [node name="Viewport" type="Viewport" parent="Control/ViewportContainer"]
-size = Vector2( 534, 336 )
+size = Vector2( 480, 336 )
 handle_input_locally = false
 usage = 0
 render_target_update_mode = 3
 
 [node name="World" parent="Control/ViewportContainer/Viewport" instance=ExtResource( 1 )]
+pause_mode = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Control"]
 anchor_right = 1.0
@@ -72,10 +77,11 @@ __meta__ = {
 }
 
 [node name="MarginContainer" type="MarginContainer" parent="Control/HBoxContainer"]
-margin_left = 453.0
-margin_right = 533.0
+margin_left = 400.0
+margin_right = 486.0
 margin_bottom = 360.0
 mouse_filter = 1
+custom_constants/margin_right = 6
 custom_constants/margin_top = 6
 custom_constants/margin_bottom = 17
 
@@ -103,19 +109,30 @@ custom_constants/separation = 0
 alignment = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Control/HBoxContainer"]
-margin_left = 527.0
+margin_left = 480.0
 margin_right = 640.0
 margin_bottom = 360.0
 grow_horizontal = 0
-rect_min_size = Vector2( 113, 0 )
+rect_min_size = Vector2( 160, 0 )
 custom_constants/separation = -6
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Status" type="NinePatchRect" parent="Control/HBoxContainer/VBoxContainer"]
-margin_right = 113.0
+[node name="Status" type="ColorRect" parent="Control/HBoxContainer/VBoxContainer"]
+show_behind_parent = true
+margin_right = 160.0
 margin_bottom = 48.0
+rect_min_size = Vector2( 60, 48 )
+size_flags_horizontal = 3
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Status" type="NinePatchRect" parent="Control/HBoxContainer/VBoxContainer/Status"]
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 0
 rect_min_size = Vector2( 60, 48 )
 mouse_filter = 1
@@ -128,7 +145,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="MarginContainer" type="MarginContainer" parent="Control/HBoxContainer/VBoxContainer/Status"]
+[node name="MarginContainer" type="MarginContainer" parent="Control/HBoxContainer/VBoxContainer/Status/Status"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 1
@@ -139,7 +156,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Control/HBoxContainer/VBoxContainer/Status/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/HBoxContainer/VBoxContainer/Status/Status/MarginContainer"]
 margin_left = 11.0
 margin_right = 101.0
 margin_bottom = 48.0
@@ -150,7 +167,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="Control/HBoxContainer/VBoxContainer/Status/MarginContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="Control/HBoxContainer/VBoxContainer/Status/Status/MarginContainer/VBoxContainer"]
 margin_right = 36.0
 margin_bottom = 12.0
 grow_horizontal = 0
@@ -168,7 +185,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ColorRect" type="ColorRect" parent="Control/HBoxContainer/VBoxContainer/Status/MarginContainer/VBoxContainer/Label"]
+[node name="ColorRect" type="ColorRect" parent="Control/HBoxContainer/VBoxContainer/Status/Status/MarginContainer/VBoxContainer/Label"]
 show_behind_parent = true
 margin_right = 128.0
 margin_bottom = 80.0
@@ -179,7 +196,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HP" type="Label" parent="Control/HBoxContainer/VBoxContainer/Status/MarginContainer/VBoxContainer"]
+[node name="HP" type="Label" parent="Control/HBoxContainer/VBoxContainer/Status/Status/MarginContainer/VBoxContainer"]
 margin_top = 12.0
 margin_right = 90.0
 margin_bottom = 24.0
@@ -196,7 +213,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ColorRect" type="ColorRect" parent="Control/HBoxContainer/VBoxContainer/Status/MarginContainer/VBoxContainer/HP"]
+[node name="ColorRect" type="ColorRect" parent="Control/HBoxContainer/VBoxContainer/Status/Status/MarginContainer/VBoxContainer/HP"]
 show_behind_parent = true
 margin_right = 128.0
 margin_bottom = 80.0
@@ -207,7 +224,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Sanity" type="Label" parent="Control/HBoxContainer/VBoxContainer/Status/MarginContainer/VBoxContainer"]
+[node name="Sanity" type="Label" parent="Control/HBoxContainer/VBoxContainer/Status/Status/MarginContainer/VBoxContainer"]
 margin_top = 24.0
 margin_right = 90.0
 margin_bottom = 36.0
@@ -224,7 +241,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ColorRect" type="ColorRect" parent="Control/HBoxContainer/VBoxContainer/Status/MarginContainer/VBoxContainer/Sanity"]
+[node name="ColorRect" type="ColorRect" parent="Control/HBoxContainer/VBoxContainer/Status/Status/MarginContainer/VBoxContainer/Sanity"]
 show_behind_parent = true
 margin_right = 128.0
 margin_bottom = 80.0
@@ -235,10 +252,22 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Inventory" type="NinePatchRect" parent="Control/HBoxContainer/VBoxContainer"]
+[node name="Inventory" type="ColorRect" parent="Control/HBoxContainer/VBoxContainer"]
+show_behind_parent = true
 margin_top = 42.0
-margin_right = 113.0
+margin_right = 160.0
 margin_bottom = 318.0
+rect_min_size = Vector2( 60, 80 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Inventory" type="NinePatchRect" parent="Control/HBoxContainer/VBoxContainer/Inventory"]
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 0
 rect_min_size = Vector2( 60, 80 )
 mouse_filter = 1
@@ -252,7 +281,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="MarginContainer" type="MarginContainer" parent="Control/HBoxContainer/VBoxContainer/Inventory"]
+[node name="MarginContainer" type="MarginContainer" parent="Control/HBoxContainer/VBoxContainer/Inventory/Inventory"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 1
@@ -263,7 +292,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Control/HBoxContainer/VBoxContainer/Inventory/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/HBoxContainer/VBoxContainer/Inventory/Inventory/MarginContainer"]
 margin_left = 11.0
 margin_right = 47.0
 margin_bottom = 276.0
@@ -274,7 +303,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="Control/HBoxContainer/VBoxContainer/Inventory/MarginContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="Control/HBoxContainer/VBoxContainer/Inventory/Inventory/MarginContainer/VBoxContainer"]
 margin_right = 36.0
 margin_bottom = 12.0
 grow_horizontal = 0
@@ -293,10 +322,10 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ColorRect" type="ColorRect" parent="Control/HBoxContainer/VBoxContainer/Inventory/MarginContainer/VBoxContainer/Label"]
+[node name="ColorRect" type="ColorRect" parent="Control/HBoxContainer/VBoxContainer/Inventory/Inventory/MarginContainer/VBoxContainer/Label"]
 show_behind_parent = true
-margin_right = 128.0
-margin_bottom = 80.0
+anchor_right = 1.0
+anchor_bottom = 1.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 color = Color( 0, 0, 0, 1 )
@@ -304,10 +333,21 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Turns" type="NinePatchRect" parent="Control/HBoxContainer/VBoxContainer"]
+[node name="Turns" type="ColorRect" parent="Control/HBoxContainer/VBoxContainer"]
+show_behind_parent = true
 margin_top = 312.0
-margin_right = 113.0
+margin_right = 160.0
 margin_bottom = 360.0
+rect_min_size = Vector2( 60, 48 )
+size_flags_horizontal = 3
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Turns" type="NinePatchRect" parent="Control/HBoxContainer/VBoxContainer/Turns"]
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 0
 rect_min_size = Vector2( 60, 48 )
 texture = ExtResource( 2 )
@@ -319,7 +359,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="MarginContainer" type="MarginContainer" parent="Control/HBoxContainer/VBoxContainer/Turns"]
+[node name="MarginContainer" type="MarginContainer" parent="Control/HBoxContainer/VBoxContainer/Turns/Turns"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_horizontal = 3
@@ -329,9 +369,9 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Control/HBoxContainer/VBoxContainer/Turns/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/HBoxContainer/VBoxContainer/Turns/Turns/MarginContainer"]
 margin_left = 11.0
-margin_right = 113.0
+margin_right = 160.0
 margin_bottom = 48.0
 rect_clip_content = true
 custom_constants/separation = 0
@@ -339,7 +379,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="Control/HBoxContainer/VBoxContainer/Turns/MarginContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="Control/HBoxContainer/VBoxContainer/Turns/Turns/MarginContainer/VBoxContainer"]
 margin_right = 30.0
 margin_bottom = 12.0
 grow_horizontal = 0
@@ -355,7 +395,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ColorRect" type="ColorRect" parent="Control/HBoxContainer/VBoxContainer/Turns/MarginContainer/VBoxContainer/Label"]
+[node name="ColorRect" type="ColorRect" parent="Control/HBoxContainer/VBoxContainer/Turns/Turns/MarginContainer/VBoxContainer/Label"]
 show_behind_parent = true
 margin_right = 128.0
 margin_bottom = 80.0
@@ -366,7 +406,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Turns" type="Label" parent="Control/HBoxContainer/VBoxContainer/Turns/MarginContainer/VBoxContainer"]
+[node name="Turns" type="Label" parent="Control/HBoxContainer/VBoxContainer/Turns/Turns/MarginContainer/VBoxContainer"]
 margin_top = 12.0
 margin_right = 72.0
 margin_bottom = 24.0
@@ -383,7 +423,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ColorRect" type="ColorRect" parent="Control/HBoxContainer/VBoxContainer/Turns/MarginContainer/VBoxContainer/Turns"]
+[node name="ColorRect" type="ColorRect" parent="Control/HBoxContainer/VBoxContainer/Turns/Turns/MarginContainer/VBoxContainer/Turns"]
 show_behind_parent = true
 margin_right = 128.0
 margin_bottom = 80.0
@@ -394,7 +434,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Elapsed" type="Label" parent="Control/HBoxContainer/VBoxContainer/Turns/MarginContainer/VBoxContainer"]
+[node name="Elapsed" type="Label" parent="Control/HBoxContainer/VBoxContainer/Turns/Turns/MarginContainer/VBoxContainer"]
 margin_top = 24.0
 margin_right = 54.0
 margin_bottom = 36.0
@@ -411,7 +451,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ColorRect" type="ColorRect" parent="Control/HBoxContainer/VBoxContainer/Turns/MarginContainer/VBoxContainer/Elapsed"]
+[node name="ColorRect" type="ColorRect" parent="Control/HBoxContainer/VBoxContainer/Turns/Turns/MarginContainer/VBoxContainer/Elapsed"]
 show_behind_parent = true
 margin_right = 128.0
 margin_bottom = 80.0
@@ -421,3 +461,393 @@ color = Color( 0, 0, 0, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Choice" type="MarginContainer" parent="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/margin_right = 120
+custom_constants/margin_top = 100
+custom_constants/margin_left = 120
+custom_constants/margin_bottom = 40
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Control/Choice"]
+margin_left = 120.0
+margin_top = 100.0
+margin_right = 520.0
+margin_bottom = 320.0
+grow_horizontal = 0
+rect_min_size = Vector2( 113, 0 )
+custom_constants/separation = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="NinePatchRect" parent="Control/Choice/VBoxContainer2"]
+margin_left = 140.0
+margin_right = 260.0
+margin_bottom = 32.0
+grow_horizontal = 0
+rect_min_size = Vector2( 120, 32 )
+mouse_filter = 1
+size_flags_horizontal = 4
+texture = ExtResource( 2 )
+patch_margin_left = 11
+patch_margin_top = 11
+patch_margin_right = 11
+patch_margin_bottom = 11
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/Choice/VBoxContainer2/Title"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 1
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/margin_bottom = 4
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/Choice/VBoxContainer2/Title/MarginContainer"]
+margin_right = 120.0
+margin_bottom = 28.0
+rect_clip_content = true
+custom_constants/separation = 0
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Control/Choice/VBoxContainer2/Title/MarginContainer/VBoxContainer"]
+margin_left = 18.0
+margin_top = 8.0
+margin_right = 102.0
+margin_bottom = 20.0
+grow_horizontal = 0
+grow_vertical = 0
+rect_min_size = Vector2( 0, 12 )
+rect_clip_content = true
+hint_tooltip = "AAAA"
+mouse_filter = 1
+size_flags_horizontal = 4
+size_flags_vertical = 0
+custom_fonts/font = ExtResource( 3 )
+text = "Choose a Spell"
+valign = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="Control/Choice/VBoxContainer2/Title/MarginContainer/VBoxContainer/Label"]
+show_behind_parent = true
+margin_right = 128.0
+margin_bottom = 80.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/Choice/VBoxContainer2"]
+margin_top = 32.0
+margin_right = 400.0
+margin_bottom = 152.0
+alignment = 1
+
+[node name="SpellChoice" type="NinePatchRect" parent="Control/Choice/VBoxContainer2/HBoxContainer"]
+margin_left = 76.0
+margin_right = 156.0
+margin_bottom = 120.0
+grow_horizontal = 0
+rect_min_size = Vector2( 80, 120 )
+mouse_filter = 1
+size_flags_vertical = 3
+texture = ExtResource( 2 )
+patch_margin_left = 11
+patch_margin_top = 11
+patch_margin_right = 11
+patch_margin_bottom = 11
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/Choice/VBoxContainer2/HBoxContainer/SpellChoice"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 1
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/margin_right = 11
+custom_constants/margin_left = 11
+custom_constants/margin_bottom = 11
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/Choice/VBoxContainer2/HBoxContainer/SpellChoice/MarginContainer"]
+margin_left = 11.0
+margin_right = 69.0
+margin_bottom = 109.0
+rect_clip_content = true
+custom_constants/separation = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SpellName" type="Label" parent="Control/Choice/VBoxContainer2/HBoxContainer/SpellChoice/MarginContainer/VBoxContainer"]
+margin_right = 58.0
+margin_bottom = 12.0
+grow_horizontal = 0
+grow_vertical = 0
+rect_min_size = Vector2( 0, 12 )
+rect_clip_content = true
+hint_tooltip = "Testing 123"
+mouse_filter = 1
+size_flags_horizontal = 3
+size_flags_vertical = 0
+custom_fonts/font = ExtResource( 3 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "Spells"
+valign = 2
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="Control/Choice/VBoxContainer2/HBoxContainer/SpellChoice/MarginContainer/VBoxContainer/SpellName"]
+show_behind_parent = true
+margin_right = 128.0
+margin_bottom = 80.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SpellDesc" type="Label" parent="Control/Choice/VBoxContainer2/HBoxContainer/SpellChoice/MarginContainer/VBoxContainer"]
+margin_top = 12.0
+margin_right = 58.0
+margin_bottom = 97.0
+grow_horizontal = 0
+grow_vertical = 0
+rect_min_size = Vector2( 0, 12 )
+rect_clip_content = true
+hint_tooltip = "Testing 123"
+mouse_filter = 1
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 3 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+valign = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CustomButton" parent="Control/Choice/VBoxContainer2/HBoxContainer/SpellChoice/MarginContainer/VBoxContainer" instance=ExtResource( 6 )]
+margin_top = 97.0
+margin_right = 58.0
+margin_bottom = 109.0
+text = "Take"
+
+[node name="SpellChoice2" type="NinePatchRect" parent="Control/Choice/VBoxContainer2/HBoxContainer"]
+margin_left = 160.0
+margin_right = 240.0
+margin_bottom = 120.0
+grow_horizontal = 0
+rect_min_size = Vector2( 80, 120 )
+mouse_filter = 1
+texture = ExtResource( 2 )
+patch_margin_left = 11
+patch_margin_top = 11
+patch_margin_right = 11
+patch_margin_bottom = 11
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/Choice/VBoxContainer2/HBoxContainer/SpellChoice2"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 1
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/margin_right = 11
+custom_constants/margin_left = 11
+custom_constants/margin_bottom = 11
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/Choice/VBoxContainer2/HBoxContainer/SpellChoice2/MarginContainer"]
+margin_left = 11.0
+margin_right = 69.0
+margin_bottom = 109.0
+rect_clip_content = true
+custom_constants/separation = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SpellName" type="Label" parent="Control/Choice/VBoxContainer2/HBoxContainer/SpellChoice2/MarginContainer/VBoxContainer"]
+margin_right = 58.0
+margin_bottom = 12.0
+grow_horizontal = 0
+grow_vertical = 0
+rect_min_size = Vector2( 0, 12 )
+rect_clip_content = true
+hint_tooltip = "Testing 123"
+mouse_filter = 1
+size_flags_horizontal = 3
+size_flags_vertical = 0
+custom_fonts/font = ExtResource( 3 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "Spells"
+valign = 2
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="Control/Choice/VBoxContainer2/HBoxContainer/SpellChoice2/MarginContainer/VBoxContainer/SpellName"]
+show_behind_parent = true
+margin_right = 128.0
+margin_bottom = 80.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SpellDesc" type="Label" parent="Control/Choice/VBoxContainer2/HBoxContainer/SpellChoice2/MarginContainer/VBoxContainer"]
+margin_top = 12.0
+margin_right = 58.0
+margin_bottom = 97.0
+grow_horizontal = 0
+grow_vertical = 0
+rect_min_size = Vector2( 0, 12 )
+rect_clip_content = true
+hint_tooltip = "Testing 123"
+mouse_filter = 1
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 3 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+valign = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CustomButton" parent="Control/Choice/VBoxContainer2/HBoxContainer/SpellChoice2/MarginContainer/VBoxContainer" instance=ExtResource( 6 )]
+margin_top = 97.0
+margin_right = 58.0
+margin_bottom = 109.0
+text = "Take"
+
+[node name="SpellChoice3" type="NinePatchRect" parent="Control/Choice/VBoxContainer2/HBoxContainer"]
+margin_left = 244.0
+margin_right = 324.0
+margin_bottom = 120.0
+grow_horizontal = 0
+rect_min_size = Vector2( 80, 120 )
+mouse_filter = 1
+texture = ExtResource( 2 )
+patch_margin_left = 11
+patch_margin_top = 11
+patch_margin_right = 11
+patch_margin_bottom = 11
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/Choice/VBoxContainer2/HBoxContainer/SpellChoice3"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 1
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/margin_right = 11
+custom_constants/margin_left = 11
+custom_constants/margin_bottom = 11
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/Choice/VBoxContainer2/HBoxContainer/SpellChoice3/MarginContainer"]
+margin_left = 11.0
+margin_right = 69.0
+margin_bottom = 109.0
+rect_clip_content = true
+custom_constants/separation = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SpellName" type="Label" parent="Control/Choice/VBoxContainer2/HBoxContainer/SpellChoice3/MarginContainer/VBoxContainer"]
+margin_right = 58.0
+margin_bottom = 12.0
+grow_horizontal = 0
+grow_vertical = 0
+rect_min_size = Vector2( 0, 12 )
+rect_clip_content = true
+hint_tooltip = "Testing 123"
+mouse_filter = 1
+size_flags_horizontal = 3
+size_flags_vertical = 0
+custom_fonts/font = ExtResource( 3 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "Spells"
+valign = 2
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="Control/Choice/VBoxContainer2/HBoxContainer/SpellChoice3/MarginContainer/VBoxContainer/SpellName"]
+show_behind_parent = true
+margin_right = 128.0
+margin_bottom = 80.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SpellDesc" type="Label" parent="Control/Choice/VBoxContainer2/HBoxContainer/SpellChoice3/MarginContainer/VBoxContainer"]
+margin_top = 12.0
+margin_right = 58.0
+margin_bottom = 97.0
+grow_horizontal = 0
+grow_vertical = 0
+rect_min_size = Vector2( 0, 12 )
+rect_clip_content = true
+hint_tooltip = "Testing 123"
+mouse_filter = 1
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 3 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+valign = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CustomButton" parent="Control/Choice/VBoxContainer2/HBoxContainer/SpellChoice3/MarginContainer/VBoxContainer" instance=ExtResource( 6 )]
+margin_top = 97.0
+margin_right = 58.0
+margin_bottom = 109.0
+text = "Take"
+[connection signal="pressed" from="Control/Choice/VBoxContainer2/HBoxContainer/SpellChoice/MarginContainer/VBoxContainer/CustomButton" to="." method="_on_SpellChoice1_pressed"]
+[connection signal="pressed" from="Control/Choice/VBoxContainer2/HBoxContainer/SpellChoice2/MarginContainer/VBoxContainer/CustomButton" to="." method="_on_SpellChoice2_pressed"]
+[connection signal="pressed" from="Control/Choice/VBoxContainer2/HBoxContainer/SpellChoice3/MarginContainer/VBoxContainer/CustomButton" to="." method="_on_SpellChoice3_pressed"]

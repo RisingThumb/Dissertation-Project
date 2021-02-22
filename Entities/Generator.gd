@@ -75,7 +75,6 @@ func populate_world(rooms:bool=false) -> void:
 					for enemy in enemies:
 						randomize()
 						if randf() < enemy.get("probability"):
-							#print(enemy)
 							var entityId = Ai.get_id_by_name(enemy.get("name"))
 							var entityData = Ai.get_entity_data(entityId)
 							var newEntity = Entity.instance()
@@ -125,6 +124,8 @@ func make_start_to_end_path():
 	chosen_path = roomsInPath
 
 func set_level_data():
+	if GameState.render != null:
+		GameState.render.present_choices(true)
 	randomize()
 	chosen_path.clear()
 	var data: Dictionary = Level.next_level()
@@ -424,31 +425,33 @@ func make_corridors(door_probability:int = 1.0): # Type not used but should be u
 			p_set_cell(Map, corridorpositions[0].x, corridorpositions[0].y, air_coord.x, air_coord.y)
 			if corridorpositions[0].x == corridorpositions[1].x and \
 				Map.get_cell_autotile_coord(corridorpositions[0].x+1, corridorpositions[0].y) == air_coord:
-					make_doors(door_probability, corridorpositions[0], arc[1], arc[0])
-					exit = true
+					if !exit:
+						make_doors(door_probability, corridorpositions[0], arc[1], arc[0])
+						exit = true
 		while corridorpositions[0].x > corridorpositions[1].x:
 			corridorpositions[0].x-=1
 			p_set_cell(Map, corridorpositions[0].x, corridorpositions[0].y, air_coord.x, air_coord.y)
 			if corridorpositions[0].x == corridorpositions[1].x and \
 				Map.get_cell_autotile_coord(corridorpositions[0].x-1, corridorpositions[0].y) == air_coord:
-					make_doors(door_probability, corridorpositions[0], arc[1], arc[0])
-					exit = true
-		if exit:
-			continue
+					if !exit:
+						make_doors(door_probability, corridorpositions[0], arc[1], arc[0])
+						exit = true
 		while corridorpositions[0].y < corridorpositions[1].y:
 			corridorpositions[0].y+=1
 			p_set_cell(Map, corridorpositions[0].x, corridorpositions[0].y, air_coord.x, air_coord.y)
 			if Map.get_cell_autotile_coord(corridorpositions[0].x+1, corridorpositions[0].y) == air_coord or \
 				Map.get_cell_autotile_coord(corridorpositions[0].x-1, corridorpositions[0].y) == air_coord:
-				make_doors(door_probability, corridorpositions[0], arc[1], arc[0])
-				break
+				if !exit:
+					exit = true
+					make_doors(door_probability, corridorpositions[0], arc[1], arc[0])
 		while corridorpositions[0].y > corridorpositions[1].y:
 			corridorpositions[0].y-=1
 			p_set_cell(Map, corridorpositions[0].x, corridorpositions[0].y, air_coord.x, air_coord.y)
 			if Map.get_cell_autotile_coord(corridorpositions[0].x+1, corridorpositions[0].y) == air_coord or \
 				Map.get_cell_autotile_coord(corridorpositions[0].x-1, corridorpositions[0].y) == air_coord:
-				make_doors(door_probability, corridorpositions[0], arc[1], arc[0])
-				break
+				if !exit:
+					exit = true
+					make_doors(door_probability, corridorpositions[0], arc[1], arc[0])
 
 func prepare_tiles():
 	renderst.clear()
@@ -543,5 +546,6 @@ func _draw():
 				var pos1 = Vector2((room.x+room.width/2)*tile_size + 8, (room.y+room.height/2)*tile_size)
 				var pos2 = Vector2((prevroom.x+prevroom.width/2)*tile_size + 8, (prevroom.y+prevroom.height/2)*tile_size)
 				draw_line(pos1, pos2, Color(32, 228, 0), 0.5)
+
 func _process(_delta):
 	update()
