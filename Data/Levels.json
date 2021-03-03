@@ -3,10 +3,10 @@
     {
     "name":"Confess your crimes, Cultists...",
     "id": 0,
+    "item_points" : 8,
     "fg1": "#8ba7b2",
     "textfg":"#ffba4d",
     "function_order": [
-        "fill_map",
         "generate_rooms",
         "fill_rooms",
         "make_corridors",
@@ -30,10 +30,10 @@
     {
     "name":"Die potato, Die",
     "id": 1,
+    "item_points" : 7,
     "fg1": "#3f34ca",
     "textfg":"#739403",
     "function_order": [
-        "fill_map",
         "recursive_backtrack_maze",
         "generate_rooms",
         "fill_rooms",
@@ -47,16 +47,17 @@
     {
     "name":"A Colossal Cave Adventure!",
     "id": 2,
+    "item_points" : 6,
     "fg1": "#3f34ca",
     "textfg":"#739403",
     "function_order": [
-        "fill_map",
         "random_air",
         "dig_caves",
         "get_air_sets",
         "connect_air_sets",
         "replace_decor",
-        "populate_world"
+        "populate_world",
+        "fill_rooms"
         ],
     "enemies": [
         {
@@ -68,25 +69,26 @@
     {
     "name":"All Warfare is based on Deception.",
     "id": 3,
+    "item_points" : 5,
     "fg1": "#3f443d",
     "textfg":"#1314a3",
     "function_order": [
-        "fill_map",
         "recursive_backtrack_maze",
         "dig_caves",
         "get_air_sets",
         "connect_air_sets",
-        "replace_decor"
+        "replace_decor",
+        "fill_rooms"
         ],
     "enemies": []
     },
     {
     "name":"We must perform a vlorbelswick",
     "id": 4,
+    "item_points" : 4,
     "fg1": "#de0034",
     "textfg":"#34de03",
     "function_order": [
-        "fill_map",
         "random_air",
         "dig_caves",
         "get_air_sets",
@@ -104,10 +106,11 @@
 "default": {
     "name":"I AM ERROR LEVEL",
     "id": -1,
+    "item_points" : 0,
     "fg1": "#ff00ff",
     "textfg":"#ff00ff",
     "function_order": [
-        "fill_map"
+        "prepare_tiles"
         ],
     "enemies": []
     }

@@ -11,6 +11,7 @@ var current_stamina : int
 var current_sanity : int
 var current_damage: int = 1
 var player = null
+var keys = 0
 
 const INVENTORY_SIZE : int = 20
 var inventory:Array = []
@@ -94,8 +95,18 @@ func change_sanity(amount : int) -> bool:
 	GameState.request_render(RenderClass.renderTarget.STATUS)
 	return true
 
+func change_keys(amount : int) -> bool:
+	if keys + amount < 0:
+		return false
+	keys += amount
+	GameState.request_render(RenderClass.renderTarget.STATUS)
+	return true
+
 func get_hp() -> int:
 	return current_hp
+
+func get_keys() -> int:
+	return keys
 
 func get_stamina() -> int:
 	return current_stamina

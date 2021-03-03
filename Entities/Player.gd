@@ -112,7 +112,7 @@ func spell_missile(direction: Vector2):
 	$RayCast2D.cast_to = GameState.tile_size * 11 * direction
 	$RayCast2D.force_raycast_update()
 	var c =$RayCast2D.get_collider()
-	if "enemy" in c.get_groups():
+	if c != null and "enemy" in c.get_groups():
 		c.call("hurt", 3)
 	yield(get_tree(), "idle_frame")
 	$Line2D.default_color = Color.aqua
@@ -136,7 +136,7 @@ func spell_polymorph(direction: Vector2):
 	$RayCast2D.cast_to = GameState.tile_size * 5 * direction
 	$RayCast2D.force_raycast_update()
 	var c =$RayCast2D.get_collider()
-	if "enemy" in c.get_groups():
+	if c != null and "enemy" in c.get_groups():
 		c.call("polymorph")
 	yield(get_tree(), "idle_frame")
 	$Line2D.default_color = Color.fuchsia

@@ -11,6 +11,10 @@ enum Item {
 	KEY,
 }
 
+var hpToGive = 0
+var sanityToGive = 0
+var keysToGive = 0
+
 var items = {
 	Item.KEY : {
 		"frames"	: [218, 219],
@@ -62,12 +66,19 @@ var items = {
 	}
 }
 
+func set_item(item):
+	var itemOfInterest = items[item]
+	var frames = itemOfInterest["frames"]
+	$TextureSprite.frame = frames[randi() % frames.size()]
+	hpToGive = itemOfInterest["hp"]
+	sanityToGive = itemOfInterest["sanity"]
+	keysToGive = itemOfInterest["keys"]
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+func _on_Area2D_area_entered(area):
+	if "Player" in area.get_groups():
+		PlayerState.change_hp(hpToGive)
+		PlayerState.change_sanity(sanityToGive)
+		PlayerState.change_keys(keysToGive)
+		GameState.map.EntityContainer.remove_child(self)
+		queue_free()

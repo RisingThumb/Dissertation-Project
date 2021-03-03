@@ -15,6 +15,8 @@ var Room = preload("res://Entities/Room.tscn")
 var Exit = preload("res://Entities/Stairs.tscn")
 var Door = preload("res://Entities/Door.tscn")
 var Entity = preload("res://Entities/Entity.tscn")
+var ItemEnt = preload("res://Entities/Item.tscn")
+var itempoint = 0
 
 var enemies = []
 
@@ -50,7 +52,20 @@ func fill_rooms():
 	# First we pick a room as the room the player "Starts" at
 	make_start_to_end_path()
 	if chosen_path.size() == 0:
-		pass # Caves typically
+		print("err..?")
+		var exit = Exit.instance()
+		EntityContainer.add_child(exit)
+		var things = [exit, GameState.player]
+		var area = GameState.map.bias
+		for thing in things:
+			while true:
+				var testPos = Vector2(floor(rand_range(1, area.x)), floor(rand_range(1, area.y)))
+				if GameState.map.Map.get_cell_autotile_coord(testPos.x, testPos.y) == GameState.map.air_coord:
+					if thing == GameState.player:
+						GameState.player.set_position(testPos*GameState.tile_size)
+					else:
+						thing.global_position = testPos*GameState.tile_size
+					break
 	else:
 		var startRoom = RoomContainer.get_children()[chosen_path[0]]
 		var endRoom = RoomContainer.get_children()[chosen_path[-1]]
@@ -69,9 +84,10 @@ func fill_rooms():
 
 func populate_world(rooms:bool=false) -> void:
 	if !rooms:
+		# Enemies
 		for x in range(1, bias.x):
 			for y in range(1, bias.y):
-				if Map.get_cell_autotile_coord(x, y) == air_coord:
+				if Map.get_cell_autotile_coord(x, y) == air_coord: # TODO add check for door/player
 					for enemy in enemies:
 						randomize()
 						if randf() < enemy.get("probability"):
@@ -82,6 +98,34 @@ func populate_world(rooms:bool=false) -> void:
 							newEntity.set_position(Vector2(x*tile_size, y*tile_size))
 							EntityContainer.add_child(newEntity)
 							break
+		# Items
+		for i in range(itempoint):
+			while true:
+				var testPos = Vector2(floor(rand_range(1, bias.x)), floor(rand_range(1, bias.y)))
+				if Map.get_cell_autotile_coord(testPos.x, testPos.y) == air_coord:
+					var itemEnt = ItemEnt.instance()
+					EntityContainer.add_child(itemEnt)
+					itemEnt.global_position = testPos*tile_size
+					randomize()
+					var check = randf()
+					if check < 0.25: # key
+						itemEnt.set_item(itemEnt.Item.KEY)
+					elif check < 0.3: # Meat
+						itemEnt.set_item(itemEnt.Item.MEAT)
+					elif check < 0.4: # Bread
+						itemEnt.set_item(itemEnt.Item.BREAD)
+					elif check < 0.5:
+						itemEnt.set_item(itemEnt.Item.FRUIT)
+					elif check < 0.67:
+						itemEnt.set_item(itemEnt.Item.EYES)
+					elif check < 0.77:
+						itemEnt.set_item(itemEnt.Item.CANDY)
+					elif check < 0.85:
+						itemEnt.set_item(itemEnt.Item.POTION_MINOR)
+					elif check < 0.95:
+						itemEnt.set_item(itemEnt.Item.POTION_MAJOR)
+					print("Placed item!")
+					break
 
 func make_start_to_end_path():
 	if RoomContainer.get_child_count() == 0:
@@ -127,13 +171,15 @@ func set_level_data():
 	if GameState.render != null:
 		GameState.render.present_choices(true)
 	randomize()
-	chosen_path.clear()
+	chosen_path = []
 	var data: Dictionary = Level.next_level()
 	enemies = data.get("enemies")
 	for entity in EntityContainer.get_children():
 		entity.queue_free()
 	Map.modulate = Color(str(data.get("fg1")))
+	itempoint = data.get("item_points")
 	var functions: Array = data.get("function_order")
+	prepare_tiles()
 	for function in functions:
 		self.call(function)
 	GameState.request_render(RenderClass.renderTarget.ROOM_TITLE)
@@ -362,7 +408,7 @@ func generate_st() -> Array:
 	var visited = []
 	var st = []
 	visited.append(0)
-	var max_int = 9223372036854775807 # magic marc left his magic here
+	var max_int = 9223372036854775807
 	for _i in range(rooms.size()):
 		var currentChoice = [0, 0, max_int] # This is maximum integer
 		var indexToRemove = -1
@@ -416,7 +462,6 @@ func make_corridors(door_probability:int = 1.0): # Type not used but should be u
 			corridorpositions.append(pos2)
 		# We have the 2 chosen positions, now we make a corridor
 		corridorpositions.shuffle()
-		#make_doors(1.0, corridorpositions[0])
 		# Iterate towards it
 		p_set_cell(Map, corridorpositions[0].x, corridorpositions[0].y, air_coord.x, air_coord.y)
 		var exit = false
@@ -455,9 +500,13 @@ func make_corridors(door_probability:int = 1.0): # Type not used but should be u
 
 func prepare_tiles():
 	renderst.clear()
+	chosen_path.clear()
+	for ent in EntityContainer.get_children():
+		ent.queue_free()
 	var children = RoomContainer.get_children()
-	for child in children:
-		child.queue_free()
+	for room in children:
+		RoomContainer.remove_child(room)
+		room.queue_free()
 	Map.clear()
 	fill_map()
 
@@ -489,9 +538,6 @@ func generate_rooms():
 
 
 func fill_map():
-	for ent in EntityContainer.get_children():
-		ent.queue_free()
-	chosen_path.clear()
 	for x in range(bias.x):
 		for y in range(bias.y):
 			p_set_cell(Map, x, y, 3 + (randi() % 3), 8)

@@ -41,8 +41,8 @@ func interact_door(parameters: Dictionary)->void:
 	if parameters.has("lock") and parameters["lock"]:
 		for door in GameState.player.doors:
 			if door.locked:
-				door.unlock_door()
-				#TODO key item consumption
+				if PlayerState.change_keys(-1):
+					door.unlock_door()
 				break
 	else:
 		for door in GameState.player.doors:
@@ -63,9 +63,4 @@ func spell(parameters: Dictionary)->void:
 	var damage = parameters.get("damage")
 	var canDo = PlayerState.change_sanity(-sanityCost)
 	if canDo:
-		#if PlayerState.has_method(str(spell)):
 		PlayerState.player.call(str(spell))
-		#else:
-		#	print(spell + " needs implementing!")
-	#PlayerState.change_sanity(2);
-	#Handle casting

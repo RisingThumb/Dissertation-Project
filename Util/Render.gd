@@ -32,7 +32,8 @@ var turnPrefix = "Remaining:"
 var elapsedPrefix = "Elapsed:"
 var hpPrefix = "HP:"
 var staminaPrefix = "STAMINA:"
-var sanityPrefix = "SANITY:"
+var sanityPrefix = "SANITY:"#
+var keyPrefix = "Keys:"
 var currently_selected = -1
 
 func _ready():
@@ -51,6 +52,7 @@ func redraw(target: int) -> void:
 	if target == renderTarget.STATUS:
 		status.get_node("HP").text = hpPrefix + numToI(PlayerState.get_hp())
 		status.get_node("Sanity").text = sanityPrefix + numToI(PlayerState.get_sanity())
+		turns.get_node("Keys").text = keyPrefix + str(PlayerState.get_keys())
 
 	if target == renderTarget.INVENTORY:
 		var children = inventory.get_child_count()
